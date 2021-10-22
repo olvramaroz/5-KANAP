@@ -32,3 +32,30 @@ fetch("http://localhost:3000/api/products/" + newID)
       );
     }
   })
+
+//---------JE RECUPERE LES DONNEES PAR RAPPORT AU CHOIX DE L'UTILISATEUR---------
+
+// pour obtenir les valeurs du stockage
+
+function setData() {
+  let currentName = localStorage.getItem('title');
+  let currentPrice = localStorage.getItem('price');
+  let currentColor = localStorage.getItem('colors');
+
+  document.getElementById('title').value = currentName;
+  document.getElementById('price').value = currentPrice;
+  document.getElementById('colors').value = currentColor;
+}
+
+// pour enregistrer les valeurs du stockage
+
+function itemStorage() {
+  localStorage.setItem('title', document.getElementById('title').value);
+  localStorage.setItem('price', document.getElementById('price').value);
+  localStorage.setItem('colors', document.getElementById('colors').value);
+
+  setData();
+}
+
+let listen = document.getElementById("addToCart");
+listen.addEventListener("click", setData);

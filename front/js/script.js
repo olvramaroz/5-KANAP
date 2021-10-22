@@ -29,6 +29,7 @@ function showProducts(data) {
         </article>
         </a>
       `; // le dollar+accolades est une nouvelle forme de concaténation
-      // qui permet de directemet combiner des variables et des clés dans un objet ou tableau
+      // qui permet de directemet combiner des variables et des clés 
+      // dans un objet ou tableau
     }
 }
