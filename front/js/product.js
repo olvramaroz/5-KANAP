@@ -8,19 +8,24 @@ let newID = params.get('id');
 
 //---------J'APPELLE DE NOUVEAU L'API AVEC L'ID DU CANAPE CHOISI---------
 
-fetch("http://localhost:3000/api/products/" + newID)
-  .then(res => res.json())
-  .then(data => {
     // je crée les variables correspondants à chaque élément :
-    const image = document.querySelector('div.item__img');
-    const name = document.getElementById('title');
+    const image = document.getElementsByClassName('item__img');
+    const title = document.getElementById('title');
     const price = document.getElementById('price');
     const description = document.getElementById('description');
     const colors = document.getElementById('colors');
 
-    // je modifie le contenu de chaque variable avec les bons données :
-    image.innerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`;
-    name.innerHTML = `<h1>${data.name}</h1>`;
+    let imageURL = "";
+    let imageAlt = "";
+
+fetch("http://localhost:3000/api/products/" + newID)
+  .then(res => res.json())
+  .then(data => {
+    // je modifie le contenu de chaque variable avec les bonnes données :
+    image[0].innerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`;
+    imageURL = data.imageUrl;
+    imageAlt = data.altTxt;
+    title.innerHTML = `<h1>${data.name}</h1>`;
     price.innerText = `${data.price}`;
     description.innerText = `${data.description}`;
 
@@ -35,27 +40,41 @@ fetch("http://localhost:3000/api/products/" + newID)
 
 //---------JE RECUPERE LES DONNEES PAR RAPPORT AU CHOIX DE L'UTILISATEUR---------
 
-// pour obtenir les valeurs du stockage
+const quantity = document.getElementById('quantity');
+const colors = document.getElementById('colors');
 
-function setData() {
-  let currentName = localStorage.getItem('title');
-  let currentPrice = localStorage.getItem('price');
-  let currentColor = localStorage.getItem('colors');
+const addToCart = document.getElementById('addToCart');
+addToCart.addEventListener('click', (event) => {
+  event.preventDefault();
 
-  document.getElementById('title').value = currentName;
-  document.getElementById('price').value = currentPrice;
-  document.getElementById('colors').value = currentColor;
-}
+  const selection = {
+    id: newID,
+    image: imageURL,
+    alt: imageAlt,
+    name: title.textContent,
+    price: price.textContent,
+    color: colors.value,
+    quantity: quantity.value,
+  };
+  console.log(selection);
+  
+});
 
-// pour enregistrer les valeurs du stockage
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function itemStorage() {
-  localStorage.setItem('title', document.getElementById('title').value);
-  localStorage.setItem('price', document.getElementById('price').value);
-  localStorage.setItem('colors', document.getElementById('colors').value);
+// // je déclare une variable produitEnregistreDansLocalStorage dans laquelle je mets les clés+valeurs dans le local storage
+// // JSON.parse permet de convertir les données au format JSON en objet JavaScript
+// let produitEnregistreDansLocalStorage =  JSON.parse(localStorage.getItem("produit"));
+// console.log(produitEnregistreDansLocalStorage);
 
-  setData();
-}
+// // s'il y a des produits enregistrés dans le localStorage
+// if (produitEnregistreDansLocalStorage) {
+  
+// } 
+// // s'il n'y a aucun produit enregistré dans le localStorage 
+// else {
+//   produitEnregistreDansLocalStorage = [];
+//   console.log(produitEnregistreDansLocalStorage);
+// }
 
-let listen = document.getElementById("addToCart");
-listen.addEventListener("click", setData);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
