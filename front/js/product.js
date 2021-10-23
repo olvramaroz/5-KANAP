@@ -8,16 +8,17 @@ let newID = params.get('id');
 
 //---------J'APPELLE DE NOUVEAU L'API AVEC L'ID DU CANAPE CHOISI---------
 
-    // je crée les variables correspondants à chaque élément :
-    const image = document.getElementsByClassName('item__img');
-    const title = document.getElementById('title');
-    const price = document.getElementById('price');
-    const description = document.getElementById('description');
-    const colors = document.getElementById('colors');
+// je crée les variables dont j'ai besoin pour manipuler cette page :
+const image = document.getElementsByClassName('item__img');
+const title = document.getElementById('title');
+const price = document.getElementById('price');
+const description = document.getElementById('description');
+const colors = document.getElementById('colors');
 
-    let imageURL = "";
-    let imageAlt = "";
+let imageURL = "";
+let imageAlt = "";
 
+// je crée la bonne URL pour chaque produit choisi en ajoutant newID
 fetch("http://localhost:3000/api/products/" + newID)
   .then(res => res.json())
   .then(data => {
@@ -40,9 +41,10 @@ fetch("http://localhost:3000/api/products/" + newID)
 
 //---------JE RECUPERE LES DONNEES PAR RAPPORT AU CHOIX DE L'UTILISATEUR---------
 
-const quantity = document.getElementById('quantity');
-const colors = document.getElementById('colors');
+const selectQuantity = document.getElementById('quantity');
+const selectColors = document.getElementById('colors');
 
+// je configure un eventListener quand l'utilisateur clique sur ajouter au panier
 const addToCart = document.getElementById('addToCart');
 addToCart.addEventListener('click', (event) => {
   event.preventDefault();
@@ -53,28 +55,40 @@ addToCart.addEventListener('click', (event) => {
     alt: imageAlt,
     name: title.textContent,
     price: price.textContent,
-    color: colors.value,
-    quantity: quantity.value,
+    color: selectColors.value,
+    quantity: selectQuantity.value,
   };
   console.log(selection);
-  
+
+  // je déclare une variable productInLocalStorage 
+  // dans laquelle je mets les clés+valeurs dans le local storage
+  // JSON.parse permet de convertir les données au format JSON en objet JavaScript
+  let productInLocalStorage =  JSON.parse(localStorage.getItem('product'));
+  console.log(productInLocalStorage);
+
+  // j'ajoute les produits sélectionnés dans le localStorage
+  const addProductLocalStorage = () => {
+  // je récupère la sélection de l'utilisateur dans le tableau de l'objet :
+  // on peut voir dans la console qu'il y a les données,
+  // mais pas encore stockées dans le storage à ce stade
+  productInLocalStorage.push(selection);
+  // je stocke les données récupérées dans le localStorage :
+  // JSON.stringify permet de convertir les données au format JavaScript en JSON 
+  // vérifier que key et value dans l'inspecteur contiennent bien des données
+  localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+  console.log(addProductLocalStorage);
+  }
+
+  // s'il y a des produits enregistrés dans le localStorage
+  if (productInLocalStorage) {
+    addProductLocalStorage();
+    console.log(productInLocalStorage);
+  } 
+  // s'il n'y a aucun produit enregistré dans le localStorage 
+  else {
+    // je crée alors un tableau avec les éléments choisi par l'utilisateur
+    productInLocalStorage = [];
+    addProductLocalStorage();
+    console.log(productInLocalStorage);
+  }
 });
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// // je déclare une variable produitEnregistreDansLocalStorage dans laquelle je mets les clés+valeurs dans le local storage
-// // JSON.parse permet de convertir les données au format JSON en objet JavaScript
-// let produitEnregistreDansLocalStorage =  JSON.parse(localStorage.getItem("produit"));
-// console.log(produitEnregistreDansLocalStorage);
-
-// // s'il y a des produits enregistrés dans le localStorage
-// if (produitEnregistreDansLocalStorage) {
-  
-// } 
-// // s'il n'y a aucun produit enregistré dans le localStorage 
-// else {
-//   produitEnregistreDansLocalStorage = [];
-//   console.log(produitEnregistreDansLocalStorage);
-// }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
