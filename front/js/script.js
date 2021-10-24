@@ -10,6 +10,10 @@ fetch('http://localhost:3000/api/products')
   .then(data => { 
     showProducts(data);
   })
+  // j'ajoute un message au cas où le serveur ne répond pas
+  .catch(_error => {
+    alert('Oops ! Le serveur ne répond pas, suivez les instructions dans le READ.me.');
+  });
 
   //---------J'AFFICHE TOUS LES PRODUITS---------
 

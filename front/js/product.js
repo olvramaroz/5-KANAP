@@ -38,6 +38,11 @@ fetch("http://localhost:3000/api/products/" + newID)
       );
     }
   })
+    // j'ajoute un message au cas où le serveur ne répond pas
+  .catch(_error => {
+    alert('Oops ! Le serveur ne répond pas, suivez les instructions dans le READ.me.');
+  });
+
 
 //---------JE RECUPERE LES DONNEES PAR RAPPORT AU CHOIX DE L'UTILISATEUR---------
 
@@ -79,9 +84,15 @@ addToCart.addEventListener('click', (event) => {
   console.log(addProductLocalStorage);
   }
 
+  // je crée une boîte de dialogue pour confirmer l'ajout au panier
+  let addConfirm = () => {
+    alert('Le produit a bien été ajouté au panier');
+  }
+
   // s'il y a des produits enregistrés dans le localStorage
   if (productInLocalStorage) {
     addProductLocalStorage();
+    addConfirm();
     console.log(productInLocalStorage);
   } 
   // s'il n'y a aucun produit enregistré dans le localStorage 
@@ -89,6 +100,7 @@ addToCart.addEventListener('click', (event) => {
     // je crée alors un tableau avec les éléments choisi par l'utilisateur
     productInLocalStorage = [];
     addProductLocalStorage();
+    addConfirm();
     console.log(productInLocalStorage);
   }
 });
