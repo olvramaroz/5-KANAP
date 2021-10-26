@@ -104,3 +104,6 @@ addToCart.addEventListener('click', (event) => {
     console.log(productInLocalStorage);
   }
 });
+
+
+
