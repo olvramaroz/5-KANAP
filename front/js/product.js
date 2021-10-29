@@ -76,6 +76,8 @@ addToCart.addEventListener('click', (event) => {
   // je récupère la sélection de l'utilisateur dans le tableau de l'objet :
   // on peut voir dans la console qu'il y a les données,
   // mais pas encore stockées dans le storage à ce stade
+
+  //
   productInLocalStorage.push(selection);
   // je stocke les données récupérées dans le localStorage :
   // JSON.stringify permet de convertir les données au format JavaScript en JSON 
@@ -89,12 +91,28 @@ addToCart.addEventListener('click', (event) => {
     alert('Le produit a bien été ajouté au panier');
   }
 
+  let update = false;
+  
   // s'il y a des produits enregistrés dans le localStorage
   if (productInLocalStorage) {
+  // verifier que le produit ne soit pas deja dans le localstorage/panier
+  // avec la couleur
+   productInLocalStorage.forEach (function (productOk, key) {
+    if (productOk.id == newID && productOk.color == selectColors.value) {
+      productInLocalStorage[key].quantity = parseInt(productOk.quantity) + parseInt(selectQuantity.value);
+      localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+      update = true;
+    }
+  });
+
+  //
+    if (!update) {
     addProductLocalStorage();
     addConfirm();
     console.log(productInLocalStorage);
-  } 
+    }
+  }
+
   // s'il n'y a aucun produit enregistré dans le localStorage 
   else {
     // je crée alors un tableau avec les éléments choisi par l'utilisateur

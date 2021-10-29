@@ -15,6 +15,11 @@ h2 {
 /************/
 /*Cart Items*/
 /************/
+
+.cart__empty{
+	text-align: center;
+	font-size: 1.2rem;
+}
 .cart__item {
 	display: flex;
 	justify-content: space-around;

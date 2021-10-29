@@ -1,8 +1,3 @@
-// window.onunload = () => {
-//   // Clear the local storage
-//   window.localStorage.clear();
-// }
-
 // RECUPERER LES PRODUITS STOCKES DANS LE LOCALSTORAGE   //
 
 let productInLocalStorage =  JSON.parse(localStorage.getItem('product'));
@@ -16,11 +11,15 @@ console.log('voici les produits dans le localStorage', productInLocalStorage);
 
  // si le panier est vide : afficher 'le panier est vide'
 if(productInLocalStorage === null) {
-  alert("Votre panier est vide, merci de sélectionner des produits d'abord");
+  document.querySelector("#cart__items").innerHTML =`
+  <div class="cart__empty">
+    <p>Votre panier est vide ! <br> Merci de sélectionner des produits depuis la page d'accueil</p>
+  </div>`;
 }
 // si le panier n'est pas vide : afficher les produits dans le localStorage
 else{ 
   let itemCards = [];
+      //expression initiale; condition; incrémentation
   for (i = 0; i < productInLocalStorage.length; i++) {
     console.log(productInLocalStorage.length);
     // le code suivant sera injecté à chaque tour de boucle
@@ -55,7 +54,4 @@ else{
   const itemCart = document.getElementById('cart__items');
   itemCart.innerHTML += itemCards;
 }
-}
-
-// CALCULER NOMBRE D'ARTICLES DANS LE PANIER
-
+} // fin else : s'il y a des produits dans le panier
