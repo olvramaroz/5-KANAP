@@ -102,6 +102,7 @@ addToCart.addEventListener('click', (event) => {
       productInLocalStorage[key].quantity = parseInt(productOk.quantity) + parseInt(selectQuantity.value);
       localStorage.setItem('product', JSON.stringify(productInLocalStorage));
       update = true;
+      addConfirm();
     }
   });
 
