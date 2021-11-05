@@ -55,6 +55,35 @@ else{
   itemCart.innerHTML += itemCards;
 }
 
+// je modifie la quantité dans le panier
+function changeQtt() {
+  let itemQtt = document.querySelectorAll('.itemQuantity');
+
+  for (let m = 0; m < itemQtt.length; m++){
+    itemQtt[m].addEventListener('change' , (event) => {
+          event.preventDefault();
+
+          //Selection de l'element à modifier en fonction de son id ET sa couleur
+          let itemOldQtt = productInLocalStorage[m].quantity;
+          let itemNewQtt = itemQtt[m].value;
+          
+          const resultFind = productInLocalStorage.find((el) => el.itemNewQtt !== itemOldQtt);
+
+          resultFind.quantity = itemNewQtt;
+          productInLocalStorage[m].quantity = resultFind.quantity;
+
+          localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+
+          // avertir de la suppression et recharger la page
+          alert('Votre panier est à jour.');
+          window.location.href = "cart.html";
+    
+      })
+  }
+  console.log('je suis la quantité qui change', itemQtt);
+}
+changeQtt();
+
 // je supprime un produit dans le panier
 function deleteArticle() {
   const deleteItem = document.querySelectorAll('.deleteItem');
@@ -83,7 +112,7 @@ function deleteArticle() {
 }
 deleteArticle();
 
-// total des articles dans le panier
+// j'affiche le total des articles dans le panier
 function totalArticles() {
   let totalItems = 0;
   for (k in productInLocalStorage) {
@@ -111,31 +140,45 @@ function priceAmount() {
 }
 priceAmount();
 
-// je modifie la quantité dans le panier
-
-// function changeQuantity() {
-//   const itemQuantity = document.getElementsByClassName('itemQuantity'); 
-//   for (m = 0; m < itemQuantity.length; m++) {
-//     itemQuantity[m].addEventListener('change', (event) => {
-//       event.preventDefault();
-//       const itemNewQuantity = event.target.value;
-//     })
-  
-
-//   console.log('je suis la quantité qui change', itemNewQuantity);
-// }
-// }
-// changeQuantity();
-
-
-
-
-
-
-
-
 } // fin else : s'il y a des produits dans le panier
+/////////////////////////////////////////////////////////
 
-
-
+////////////////////////////////////////////////////////
 // DEMANDER LES INFOS DE L'UTILISATEUR
+
+
+
+// j'envoie le formulaire dans le serveur
+function postForm() {
+  const order = document.getElementById('order');
+  order.addEventListener('click', (event)=>{
+  event.preventDefault();
+  
+  // je récupère les données du formulaire dans un objet
+  const formValues = {
+    firstName : document.getElementById('firstName').value,
+    lastName : document.getElementById('lastName').value,
+    address : document.getElementById('address').value,
+    city : document.getElementById('city').value,
+    email : document.getElementById('email').value
+  }
+  console.log('je suis formValues', formValues);
+
+  // je mets l'objet formValues dans le localStorage
+  localStorage.setItem('formValues', JSON.stringify(formValues));
+
+  // je mets les valeurs du formulaire et les produits sélectionnés
+  // dans un objet que j'envoie au serveur
+  const sendFormData = {
+    formValues,
+    productInLocalStorage,
+  }
+  console.log('je suis sendformData',sendFormData);
+
+  // j'envoie le formulaire + localStorage (sendFormData) 
+  // complet vers le serveur
+
+
+  }) // fin eventListener postForm
+} // fin envoi du formulaire postForm
+postForm();
