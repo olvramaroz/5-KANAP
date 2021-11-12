@@ -1,4 +1,5 @@
 // RECUPERER LES PRODUITS STOCKES DANS LE LOCALSTORAGE   //
+let products = [];
 
 let productInLocalStorage =  JSON.parse(localStorage.getItem('product'));
 console.log('voici les produits dans le localStorage', productInLocalStorage);
@@ -21,8 +22,10 @@ else{
     
   let itemCards = [];
   
+  
   //expression initiale; condition; incrémentation
   for (i = 0; i < productInLocalStorage.length; i++) {
+  products.push(productInLocalStorage[i].id);
   console.log(productInLocalStorage.length);
   // le code suivant sera injecté à chaque tour de boucle
   // selon la longueur des produits dans le local storage
@@ -87,6 +90,7 @@ function changeQtt() {
 changeQtt();
 
 // je supprime un produit dans le panier
+
 function deleteArticle() {
 
   const deleteItem = document.querySelectorAll('.deleteItem');
@@ -146,40 +150,32 @@ priceAmount();
 
 } // fin else : s'il y a des produits dans le panier
 
-/////////////////////////////////////////////////////////
-    // je mets les contenus du localStorage dans les champs du formulaire
-    const dataLocalStorage = localStorage.getItem('formValues');
-    const dataLocalStorageObjet = JSON.parse(dataLocalStorage);
-    document.getElementById('firstName').value = dataLocalStorageObjet.firstName;
-    document.getElementById('lastName').value = dataLocalStorageObjet.lastName;
-    document.getElementById('address').value = dataLocalStorageObjet.address;
-    document.getElementById('city').value = dataLocalStorageObjet.city;
-    document.getElementById('email').value = dataLocalStorageObjet.email;
 
-////////////////////////////////////////////////////////
 // DEMANDER LES INFOS DE L'UTILISATEUR
 
 // j'envoie le formulaire dans le serveur
 function postForm() {
   const order = document.getElementById('order');
-  order.addEventListener('click', (event)=>{
+  order.addEventListener('click', (event) => {
   event.preventDefault();
-  
-  // je récupère les données du formulaire dans un objet
-  const formValues = {
-    firstName : document.getElementById('firstName').value,
-    lastName : document.getElementById('lastName').value,
-    address : document.getElementById('address').value,
-    city : document.getElementById('city').value,
-    email : document.getElementById('email').value
-  }
-  console.log('je suis formValues', formValues);
 
+  // je récupère les données du formulaire dans un objet
+    const contact = {
+      firstName : document.getElementById('firstName').value,
+      lastName : document.getElementById('lastName').value,
+      address : document.getElementById('address').value,
+      city : document.getElementById('city').value,
+      email : document.getElementById('email').value
+    }
+    console.log('je suis contact', contact);
+
+  ////
   // --- vérifier la validation des entrées --- //
+  ////
   
   //contrôle prénom, test : Martin-Luther Jr. ou 陳大文 ou ñÑâê ou ации ou John D'Largy
   function controlFirstName() {
-    const validFirstName = formValues.firstName;
+    const validFirstName = contact.firstName;
     if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validFirstName)) {
       console.log('prénom fonctionne OK');
       return true;
@@ -192,7 +188,7 @@ function postForm() {
 
   // contrôle nom
   function controlName() {
-    const validName = formValues.lastName;
+    const validName = contact.lastName;
     if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validName)) {
       console.log('nom fonctionne OK');
       return true;
@@ -205,7 +201,7 @@ function postForm() {
 
   // contrôle adresse
   function controlAddress() {
-    const validAddress = formValues.address;
+    const validAddress = contact.address;
     if (/\d{2}[ ]?\d{3}$/.test(validAddress)) {
       console.log('adresse fonctionne OK');
       return true;
@@ -218,7 +214,7 @@ function postForm() {
 
   // contrôle ville
   function controlCity() {
-    const validAddress = formValues.city;
+    const validAddress = contact.city;
     if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,10}$/.test(validAddress)) {
       console.log('ville fonctionne OK');
       return true;
@@ -231,29 +227,38 @@ function postForm() {
 
   // contrôle email
   function controlEmail() {
-    const validEmail = formValues.email;
+    const validEmail = contact.email;
     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(validEmail)) {
       console.log('email fonctionne OK');
       return true;
     } else {
       console.log('email KO');
       let emailErrorMsg = document.getElementById('emailErrorMsg');
-      emailErrorMsg.innerText = "Erreur !";
+      emailErrorMsg.innerText = "Erreur ! Email non valide";
     }
   }
+  ////
+  // --- FIN vérifier la validation des entrées --- //
+  ////
 
-  // Après vérification des entrées, j'envoie l'objet formValues dans le localStorage
-  if (controlFirstName() && controlName() && controlAddress() && controlCity() && controlEmail()) {
-    localStorage.setItem('formValues', JSON.stringify(formValues));
-  } else {
-      alert('Merci de revérifier les données du formulaire')
-    }
+  // Après vérification des entrées, j'envoie l'objet contact dans le localStorage
+  
+  function validControl() {
+    if (controlFirstName() && controlName() && controlAddress() && controlCity() && controlEmail()) {
+      localStorage.setItem('contact', JSON.stringify(contact));
+      return true;
+    } else {
+        alert('Merci de revérifier les données du formulaire')
+      }
+  }
+  validControl()
 
   // je mets les valeurs du formulaire et les produits sélectionnés
   // dans un objet...
+
   const sendFormData = {
-    formValues,
-    productInLocalStorage,
+    contact,
+    products,
   }
   console.log('je suis sendformData', sendFormData);
 
@@ -264,19 +269,34 @@ function postForm() {
     method: 'POST',
     body: JSON.stringify(sendFormData),
     headers: { 
-      'Accept': 'application/json',
       'Content-Type': 'application/json' ,
     }
   };
 
-  fetch('http://localhost:3000/api/products/order', options)
+  fetch("http://localhost:3000/api/products/order", options)
     .then(response => response.json())
     .then(data => {
-      // localStorage.clear();
-      localStorage.setItem('orderId', JSON.stringify(data.orderId));
-      document.location.href = `confirmation.html?id=${data.orderId}`;
+      localStorage.setItem('orderId', data.orderId);
+        if (validControl()) {
+          document.location.href = 'confirmation.html?id='+ data.orderId;
+        }
+      console.log('je suis la DATA', data);
     });
 
 }) // fin eventListener postForm
 } // fin envoi du formulaire postForm
 postForm();
+
+
+// // /////////////////////////////////////////////////////////
+// //     // je garde les saisies dans les champs du formulaire
+// //     // même après avoir changé de page
+//     const dataLocalStorage = localStorage.getItem('contact');
+//     const dataLocalStorageObjet = JSON.parse(dataLocalStorage);
+//     document.getElementById('firstName').value = dataLocalStorageObjet.firstName;
+//     document.getElementById('lastName').value = dataLocalStorageObjet.lastName;
+//     document.getElementById('address').value = dataLocalStorageObjet.address;
+//     document.getElementById('city').value = dataLocalStorageObjet.city;
+//     document.getElementById('email').value = dataLocalStorageObjet.email;
+
+// // ////////////////////////////////////////////////////////
