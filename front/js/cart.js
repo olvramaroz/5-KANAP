@@ -19,46 +19,44 @@ if(productInLocalStorage === null || productInLocalStorage == 0) {
 }
 // si le panier n'est pas vide : afficher les produits dans le localStorage
 else{
-    
   let itemCards = [];
-  
-  
-  //expression initiale; condition; incrémentation
-  for (i = 0; i < productInLocalStorage.length; i++) {
-  products.push(productInLocalStorage[i].id);
-  console.log(productInLocalStorage.length);
-  // le code suivant sera injecté à chaque tour de boucle
-  // selon la longueur des produits dans le local storage
-  itemCards = itemCards + `
-  
-  <article class="cart__item" data-id="${productInLocalStorage[i].id}" data-color="${productInLocalStorage.color}">
-  <div class="cart__item__img">
-    <img src="${productInLocalStorage[i].image}" alt="${productInLocalStorage[i].alt}">
-  </div>
-  <div class="cart__item__content">
-    <div class="cart__item__content__titlePrice">
-      <h2>${productInLocalStorage[i].name}</h2>
-      <p>${productInLocalStorage[i].color}</p>
-      <p>${productInLocalStorage[i].price} €</p>
+ 
+    //expression initiale; condition; incrémentation
+    for (i = 0; i < productInLocalStorage.length; i++) {
+    products.push(productInLocalStorage[i].id);
+    console.log(productInLocalStorage.length);
+    // le code suivant sera injecté à chaque tour de boucle
+    // selon la longueur des produits dans le local storage
+    itemCards = itemCards + `
+    
+    <article class="cart__item" data-id="${productInLocalStorage[i].id}" data-color="${productInLocalStorage.color}">
+    <div class="cart__item__img">
+      <img src="${productInLocalStorage[i].image}" alt="${productInLocalStorage[i].alt}">
     </div>
-    <div class="cart__item__content__settings">
-      <div class="cart__item__content__settings__quantity">
-        <p>Qté : </p>
-        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productInLocalStorage[i].quantity}">
+    <div class="cart__item__content">
+      <div class="cart__item__content__titlePrice">
+        <h2>${productInLocalStorage[i].name}</h2>
+        <p>${productInLocalStorage[i].color}</p>
+        <p>${productInLocalStorage[i].price} €</p>
       </div>
-      <div class="cart__item__content__settings__delete">
-        <p class="deleteItem">Supprimer</p>
+      <div class="cart__item__content__settings">
+        <div class="cart__item__content__settings__quantity">
+          <p>Qté : </p>
+          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productInLocalStorage[i].quantity}">
+        </div>
+        <div class="cart__item__content__settings__delete">
+          <p class="deleteItem">Supprimer</p>
+        </div>
       </div>
     </div>
-  </div>
-</article>
-  `; 
-  console.log(itemCards);
-}
-if (i === productInLocalStorage.length) {
-const itemCart = document.getElementById('cart__items');
-itemCart.innerHTML += itemCards;
-}
+  </article>
+    `; 
+    console.log(itemCards);
+  }
+  if (i === productInLocalStorage.length) {
+  const itemCart = document.getElementById('cart__items');
+  itemCart.innerHTML += itemCards;
+  }
 
 // je modifie la quantité dans le panier
 function changeQtt() {
@@ -68,7 +66,7 @@ function changeQtt() {
     itemQtt[m].addEventListener('change', (event) => {
           event.preventDefault();
 
-          //Selection de l'element à modifier en fonction de son id ET sa couleur
+          //Selection de l'element
           let itemOldQtt = productInLocalStorage[m].quantity;
           let itemNewQtt = itemQtt[m].value;
           
@@ -86,11 +84,11 @@ function changeQtt() {
       })
   }
   console.log('je suis la quantité qui change', itemQtt);
+
 }
 changeQtt();
 
 // je supprime un produit dans le panier
-
 function deleteArticle() {
 
   const deleteItem = document.querySelectorAll('.deleteItem');
@@ -102,10 +100,11 @@ function deleteArticle() {
 
       // enregistrer l'id séléctionné par le bouton supprimer
       let deleteId = productInLocalStorage[j].id;
-      console.log('je suis id supprimé', deleteId);
+      let deleteColor = productInLocalStorage[j].color;
+      console.log('je suis le produit supprimé', deleteId, deleteColor);
 
       // supprimer l'élément cliqué par le bouton supprimer
-      productInLocalStorage = productInLocalStorage.filter( elt => elt.id !== deleteId);
+      productInLocalStorage = productInLocalStorage.filter( elt => elt.id !== deleteId || elt.color !== deleteColor);
       console.log('je suis le nouveau panier', productInLocalStorage);
       
       // envoyer la variable dans le localStorage
