@@ -43,7 +43,6 @@ fetch("http://localhost:3000/api/products/" + newID)
     alert('Oops ! Le serveur ne répond pas, suivez les instructions dans le READ.me.');
   });
 
-
 //---------JE RECUPERE LES DONNEES PAR RAPPORT AU CHOIX DE L'UTILISATEUR---------
 
 const selectQuantity = document.getElementById('quantity');
@@ -63,13 +62,11 @@ addToCart.addEventListener('click', (event) => {
     color: selectColors.value,
     quantity: selectQuantity.value,
   };
-  console.log(selection);
 
   // je déclare une variable productInLocalStorage 
   // dans laquelle je mets les clés+valeurs dans le local storage
   // JSON.parse permet de convertir les données au format JSON en objet JavaScript
   let productInLocalStorage =  JSON.parse(localStorage.getItem('product'));
-  console.log(productInLocalStorage);
 
   // j'ajoute les produits sélectionnés dans le localStorage
   const addProductLocalStorage = () => {
@@ -77,13 +74,11 @@ addToCart.addEventListener('click', (event) => {
   // on peut voir dans la console qu'il y a les données,
   // mais pas encore stockées dans le storage à ce stade
 
-  //
   productInLocalStorage.push(selection);
   // je stocke les données récupérées dans le localStorage :
   // JSON.stringify permet de convertir les données au format JavaScript en JSON 
   // vérifier que key et value dans l'inspecteur contiennent bien des données
   localStorage.setItem('product', JSON.stringify(productInLocalStorage));
-  console.log(addProductLocalStorage);
   }
 
   // je crée une boîte de dialogue pour confirmer l'ajout au panier
@@ -110,7 +105,6 @@ addToCart.addEventListener('click', (event) => {
     if (!update) {
     addProductLocalStorage();
     addConfirm();
-    console.log(productInLocalStorage);
     }
   }
 
@@ -120,9 +114,7 @@ addToCart.addEventListener('click', (event) => {
     productInLocalStorage = [];
     addProductLocalStorage();
     addConfirm();
-    console.log(productInLocalStorage);
   }
 });
 
-
-
+// fin product.js

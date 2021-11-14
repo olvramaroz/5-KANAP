@@ -37,3 +37,5 @@ function showProducts(data) {
       // dans un objet ou tableau
     }
 }
+
+// fin script.js

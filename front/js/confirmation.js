@@ -5,4 +5,5 @@ function checkout(){
 }
 checkout();
 
+// fin confirmation.js
 //-----------------------------------------------------------//
