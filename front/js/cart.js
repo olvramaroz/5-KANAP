@@ -56,27 +56,30 @@ else{
 
 // je modifie la quantité dans le panier
 function changeQtt() {
-  let itemQtt = document.getElementsByClassName('itemQuantity');
-
+  let itemQtt = document.querySelectorAll('.itemQuantity');
   for (let j = 0; j < itemQtt.length; j++) {
     itemQtt[j].addEventListener('change', (event) => {
     event.preventDefault();
-
-    // sélection de l'élement
-    let itemOldQtt = productInLocalStorage[j].quantity;
+    // sélection de la nouvelle quantité...
+    // ... qu'on va sauvegarder dans un nouveau tableau
+   // avec les autres éléments du localStorage
     let itemNewQtt = itemQtt[j].value;
-          
-    // modifier la quantité dans le localstorage quand la fonction find 
-    // renvoie la nouvelle valeur trouvée dans le tableau
-    const resultFind = productInLocalStorage.find(elt => elt.itemNewQtt !== itemOldQtt);
-    resultFind.quantity = itemNewQtt;
-    productInLocalStorage[j].quantity = resultFind.quantity;
+    const newLocalStorage = {
+      id: productInLocalStorage[j].id,
+      image: productInLocalStorage[j].image,
+      alt: productInLocalStorage[j].alt,
+      name: productInLocalStorage[j].name,
+      color: productInLocalStorage[j].color,
+      price: productInLocalStorage[j].price,   
+      quantity: itemNewQtt, // avec la nouvelle quantité souhaitée
+    };
 
-    // renvoyer les nouvelles données dans le localstorage
-    // en transformant les Js en Json
+    // actualiser le localStorage avec les nouvelles données récupérées... 
+    productInLocalStorage[j] = newLocalStorage;
+    // ...en transformant les Js en Json
     localStorage.setItem('product', JSON.stringify(productInLocalStorage));
 
-    // Avertir de la modification
+    // avertir de la modification et mettre à jour les totaux
     alert('Votre panier est à jour.');
     totalArticles();
     priceAmount();
@@ -115,7 +118,6 @@ deleteArticle();
 // j'affiche le total des articles dans le panier
 function totalArticles() {
   let totalItems = 0;
-
   for (l in productInLocalStorage) {
     // analyser et convertir la valeur 'quantité' dans le localstorage en une chaîne
     // et renvoie un entier (parseInteger), sur la base décimale de 10
@@ -133,7 +135,6 @@ totalArticles();
 // je calcule le montant total du panier
 function priceAmount() {
   const calculPrice = [];
-
   for (m = 0; m < productInLocalStorage.length; m++) {
     // prix de l'article quantité * prix
     const cartAmount = productInLocalStorage[m].price * productInLocalStorage[m].quantity;
