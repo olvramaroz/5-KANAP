@@ -1,6 +1,5 @@
-# OnyLalainaValerieRamarozatovo_P5_06072021
-
-View the page here : https://olvramaroz.github.io/OnyLalainaValerieRamarozatovo_P5_06072021/
+# Dynamic Javascript e-commerce website
+# Javascript
 
 <h2>Kanap Javascript project</h2>
 
